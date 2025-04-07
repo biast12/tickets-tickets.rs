@@ -40,6 +40,8 @@ impl Poller {
         let mut res = self.poll_page(first.as_str()).await?;
         while let Some(next) = res.links.as_ref().and_then(|l| l.next.as_ref()) {
             patrons.extend(res.convert());
+            // Log the response body
+            debug!("Response body: {:?}", res.convert());
             res = self.poll_page(next.as_str()).await?;
         }
 

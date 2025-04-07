@@ -1,6 +1,8 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use serde_enum_str::Deserialize_enum_str;
+use tracing::log::{debug};
+
 
 use std::collections::HashMap;
 
@@ -38,6 +40,7 @@ pub enum ChargeStatus {
     Refunded,
     Fraud,
     Other,
+    None,
     #[serde(rename = "Free Trial")]
     FreeTrial,
     #[serde(other)]
@@ -118,7 +121,8 @@ impl PledgeResponse {
                 member.attributes.patron_status == Some(PatronStatus::ActivePatron)
                     && (member.attributes.last_charge_status == Some(ChargeStatus::Paid)
                     || member.attributes.last_charge_status == Some(ChargeStatus::Pending)
-                    || member.attributes.last_charge_status == Some(ChargeStatus::FreeTrial))
+                    || member.attributes.last_charge_status == Some(ChargeStatus::FreeTrial)
+                    || member.attributes.last_charge_status == Some(ChargeStatus::None))
                     && !member
                         .relationships
                         .currently_entitled_tiers
@@ -145,6 +149,9 @@ impl PledgeResponse {
                     .and_then(|sc| sc.discord.as_ref())
                     .map(|d| d.user_id.clone())
                     .flatten()?;
+
+                debug!(" {:?}", member);
+                debug!("Discord ID: {:?}", discord_id);
 
                 Some((discord_id, entitlements))
             })
