@@ -38,6 +38,8 @@ pub enum ChargeStatus {
     Refunded,
     Fraud,
     Other,
+    #[serde(rename = "Free Trial")]
+    FreeTrial,
     #[serde(other)]
     Unknown(String),
 }
@@ -115,7 +117,8 @@ impl PledgeResponse {
             .filter(|member| {
                 member.attributes.patron_status == Some(PatronStatus::ActivePatron)
                     && (member.attributes.last_charge_status == Some(ChargeStatus::Paid)
-                        || member.attributes.last_charge_status == Some(ChargeStatus::Pending))
+                    || member.attributes.last_charge_status == Some(ChargeStatus::Pending)
+                    || member.attributes.last_charge_status == Some(ChargeStatus::FreeTrial))
                     && !member
                         .relationships
                         .currently_entitled_tiers
@@ -185,6 +188,7 @@ mod tests {
             ("Refunded", ChargeStatus::Refunded),
             ("Fraud", ChargeStatus::Fraud),
             ("Other", ChargeStatus::Other),
+            ("Free Trial", ChargeStatus::FreeTrial),
         ];
 
         for (input, expected) in cases {
