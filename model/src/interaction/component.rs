@@ -1,4 +1,4 @@
-use super::{ActionRow, Button, InputText, SelectMenu};
+use super::{ActionRow, Button, InputText, SelectMenu, Section, TextDisplay, Thumbnail, MediaGallery, File, Separator, Container};
 use serde::de::Error;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value;
@@ -8,9 +8,17 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 #[serde(untagged)]
 pub enum Component {
     ActionRow(Box<ActionRow>),
-    Button(Box<Button>), // Clippy recommendation, large struct
+    Button(Box<Button>),
     SelectMenu(Box<SelectMenu>),
     InputText(Box<InputText>),
+    Section(Box<Section>), // 9
+    TextDisplay(Box<TextDisplay>), // 10
+    Thumbnail(Box<Thumbnail>), // 11
+    MediaGallery(Box<MediaGallery>), // 12
+    File(Box<File>), // 13
+    Separator(Box<Separator>), // 14
+    // 15 & 16 are not used
+    Container(Box<Container>), // 17
 }
 
 #[derive(Serialize_repr, Deserialize_repr, Debug, Copy, Clone)]
@@ -24,6 +32,14 @@ pub enum ComponentType {
     RoleSelect = 6,
     MentionableSelect = 7,
     ChannelSelect = 8,
+    Section = 9,
+    TextDisplay = 10,
+    Thumbnail = 11,
+    MediaGallery = 12,
+    File = 13,
+    Separator = 14,
+    // 15 & 16 are not used
+    Container = 17,
 }
 
 impl TryFrom<u64> for ComponentType {
@@ -39,6 +55,14 @@ impl TryFrom<u64> for ComponentType {
             6 => Self::RoleSelect,
             7 => Self::MentionableSelect,
             8 => Self::ChannelSelect,
+            9 => Self::Section,
+            10 => Self::TextDisplay,
+            11 => Self::Thumbnail,
+            12 => Self::MediaGallery,
+            13 => Self::File,
+            14 => Self::Separator,
+            // 15 & 16 are not used
+            17 => Self::Container,
             _ => return Err(format!("invalid component type \"{}\"", value).into_boxed_str()),
         })
     }
@@ -58,6 +82,13 @@ impl<'de> Deserialize<'de> for Component {
         let component = match component_type {
             ComponentType::ActionRow => serde_json::from_value(value).map(Component::ActionRow),
             ComponentType::Button => serde_json::from_value(value).map(Component::Button),
+            ComponentType::Section => serde_json::from_value(value).map(Component::Section),
+            ComponentType::TextDisplay => serde_json::from_value(value).map(Component::TextDisplay),
+            ComponentType::Thumbnail => serde_json::from_value(value).map(Component::Thumbnail),
+            ComponentType::MediaGallery => serde_json::from_value(value).map(Component::MediaGallery),
+            ComponentType::File => serde_json::from_value(value).map(Component::File),
+            ComponentType::Separator => serde_json::from_value(value).map(Component::Separator),
+            ComponentType::Container => serde_json::from_value(value).map(Component::Container),
             ComponentType::SelectMenu
             | ComponentType::UserSelect
             | ComponentType::RoleSelect

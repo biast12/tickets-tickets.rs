@@ -50,3 +50,24 @@ pub use input_text::{InputText, TextStyleType};
 
 mod guild_application_command_permissions;
 pub use guild_application_command_permissions::GuildApplicationCommandPermissions;
+
+mod section;
+pub use section::Section;
+
+mod text_display;
+pub use text_display::TextDisplay;
+
+mod thumbnail;
+pub use thumbnail::Thumbnail;
+
+mod media_gallery;
+pub use media_gallery::MediaGallery;
+
+mod file;
+pub use file::File;
+
+mod separator;
+pub use separator::Separator;
+
+mod container;
+pub use container::Container;
