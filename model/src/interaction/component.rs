@@ -1,4 +1,7 @@
-use super::{ActionRow, Button, InputText, SelectMenu, Section, TextDisplay, Thumbnail, MediaGallery, File, Separator, Container};
+use super::{
+    ActionRow, Button, Container, File, InputText, Label, MediaGallery, Section, SelectMenu,
+    Separator, TextDisplay, Thumbnail,
+};
 use serde::de::Error;
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value;
@@ -11,14 +14,15 @@ pub enum Component {
     Button(Box<Button>),
     SelectMenu(Box<SelectMenu>),
     InputText(Box<InputText>),
-    Section(Box<Section>), // 9
-    TextDisplay(Box<TextDisplay>), // 10
-    Thumbnail(Box<Thumbnail>), // 11
+    Section(Box<Section>),           // 9
+    TextDisplay(Box<TextDisplay>),   // 10
+    Thumbnail(Box<Thumbnail>),       // 11
     MediaGallery(Box<MediaGallery>), // 12
-    File(Box<File>), // 13
-    Separator(Box<Separator>), // 14
+    File(Box<File>),                 // 13
+    Separator(Box<Separator>),       // 14
     // 15 & 16 are not used
     Container(Box<Container>), // 17
+    Label(Box<Label>),         // 18
 }
 
 #[derive(Serialize_repr, Deserialize_repr, Debug, Copy, Clone)]
@@ -40,6 +44,7 @@ pub enum ComponentType {
     Separator = 14,
     // 15 & 16 are not used
     Container = 17,
+    Label = 18,
 }
 
 impl TryFrom<u64> for ComponentType {
@@ -63,6 +68,7 @@ impl TryFrom<u64> for ComponentType {
             14 => Self::Separator,
             // 15 & 16 are not used
             17 => Self::Container,
+            18 => Self::Label,
             _ => return Err(format!("invalid component type \"{}\"", value).into_boxed_str()),
         })
     }
@@ -85,10 +91,13 @@ impl<'de> Deserialize<'de> for Component {
             ComponentType::Section => serde_json::from_value(value).map(Component::Section),
             ComponentType::TextDisplay => serde_json::from_value(value).map(Component::TextDisplay),
             ComponentType::Thumbnail => serde_json::from_value(value).map(Component::Thumbnail),
-            ComponentType::MediaGallery => serde_json::from_value(value).map(Component::MediaGallery),
+            ComponentType::MediaGallery => {
+                serde_json::from_value(value).map(Component::MediaGallery)
+            }
             ComponentType::File => serde_json::from_value(value).map(Component::File),
             ComponentType::Separator => serde_json::from_value(value).map(Component::Separator),
             ComponentType::Container => serde_json::from_value(value).map(Component::Container),
+            ComponentType::Label => serde_json::from_value(value).map(Component::Label),
             ComponentType::SelectMenu
             | ComponentType::UserSelect
             | ComponentType::RoleSelect

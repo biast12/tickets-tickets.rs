@@ -71,3 +71,6 @@ pub use separator::Separator;
 
 mod container;
 pub use container::Container;
+
+mod label;
+pub use label::Label;
