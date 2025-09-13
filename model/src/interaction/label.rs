@@ -5,6 +5,6 @@ use serde::{Deserialize, Serialize};
 pub struct Label {
     pub r#type: ComponentType,
     pub label: Option<String>,
-    pub description: Option<String>,
+    pub description: Option<Box<str>>,
     pub component: Component,
 }

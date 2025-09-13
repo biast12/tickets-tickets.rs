@@ -161,7 +161,8 @@ pub struct ModalInteractionActionRowData {
 pub struct ModalInteractionComponentData {
     pub r#type: ComponentType,
     pub custom_id: Box<str>,
-    pub value: Box<str>,
+    pub value: Option<Box<str>>,
+    pub values: Option<Vec<Box<str>>>,
 }
 
 impl<'de> Deserialize<'de> for Interaction {
