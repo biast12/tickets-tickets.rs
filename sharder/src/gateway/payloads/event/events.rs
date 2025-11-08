@@ -66,7 +66,7 @@ pub enum Event {
     VoiceServerUpdate(super::VoiceServerUpdate),
     WebhookUpdate(super::WebhookUpdate),
     #[serde(other)]
-    Unknown,
+    Unknown(serde_json::Value),
 }
 
 impl fmt::Display for Event {
@@ -126,7 +126,7 @@ impl fmt::Display for Event {
             Event::VoiceStateUpdate(_) => write!(f, "VOICE_STATE_UPDATE"),
             Event::VoiceServerUpdate(_) => write!(f, "VOICE_SERVER_UPDATE"),
             Event::WebhookUpdate(_) => write!(f, "WEBHOOK_UPDATE"),
-            Event::Unknown => write!(f, "UNKNOWN"),
+            Event::Unknown(_) => write!(f, "UNKNOWN"),
         }
     }
 }
