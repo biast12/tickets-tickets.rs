@@ -65,6 +65,8 @@ pub enum Event {
     VoiceStateUpdate(VoiceState),
     VoiceServerUpdate(super::VoiceServerUpdate),
     WebhookUpdate(super::WebhookUpdate),
+    #[serde(other)]
+    Unknown,
 }
 
 impl fmt::Display for Event {
@@ -124,6 +126,7 @@ impl fmt::Display for Event {
             Event::VoiceStateUpdate(_) => write!(f, "VOICE_STATE_UPDATE"),
             Event::VoiceServerUpdate(_) => write!(f, "VOICE_SERVER_UPDATE"),
             Event::WebhookUpdate(_) => write!(f, "WEBHOOK_UPDATE"),
+            Event::Unknown => write!(f, "UNKNOWN"),
         }
     }
 }

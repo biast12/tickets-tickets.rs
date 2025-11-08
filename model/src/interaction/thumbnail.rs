@@ -13,7 +13,8 @@ pub struct Thumbnail {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UnfurledMediaItem {
-    pub url: Box<str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub url: Option<Box<str>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub proxy_url: Option<Box<str>>,
     #[serde(skip_serializing_if = "Option::is_none")]
